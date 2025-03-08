@@ -76,7 +76,53 @@ EOF
 
     # 🔎 Fetch user details to confirm authentication
     echo -e "\n\e[1;34m🔎 Fetching GitHub user details...\e[0m\n"
-    gh api user -q .
+    echo
+    gh api user --jq '
+		"👤 GitHub User Information:\n" +
+		"--------------------------------\n" +
+		"🔹 Username: " + .login + "\n" +
+		"🔹 ID: " + (.id|tostring) + "\n" +
+		"🔹 Profile URL: " + .html_url + "\n" +
+		"🔹 Account Type: " + .type + "\n" +
+		"🔹 Created At: " + .created_at + "\n" +
+		"🔹 Last Updated: " + .updated_at + "\n" +
+		"🔹 Two-Factor Authentication: " + (if .two_factor_authentication then "✅ Enabled" else "❌ Disabled" end) + "\n" +
+		"🔹 Site Admin: " + (if .site_admin then "✅ Yes" else "❌ No" end) + "\n\n" +
+
+		"📊 GitHub Statistics:\n" +
+		"--------------------------------\n" +
+		"🔹 Public Repos: " + (.public_repos|tostring) + "\n" +
+		"🔹 Private Repos: " + (.total_private_repos|tostring) + "\n" +
+		"🔹 Owned Private Repos: " + (.owned_private_repos|tostring) + "\n" +
+		"🔹 Plan: " + .plan.name + "\n" +
+		"🔹 Storage Space Available: " + (.plan.space|tostring) + " bytes (~" + (.plan.space / 1024 / 1024 | floor | tostring) + " MB)\n" +
+		"🔹 Disk Usage: " + (.disk_usage|tostring) + " bytes\n" +
+		"🔹 Private Gists: " + (.private_gists|tostring) + "\n" +
+		"🔹 Public Gists: " + (.public_gists|tostring) + "\n\n" +
+
+		"📡 Networking:\n" +
+		"--------------------------------\n" +
+		"🔹 Followers: " + (.followers|tostring) + "\n" +
+		"🔹 Following: " + (.following|tostring) + "\n" +
+		"🔹 Collaborators: " + (.collaborators|tostring) + "\n" +
+		"🔹 Organizations URL: " + .organizations_url + "\n" +
+		"🔹 Repositories URL: " + .repos_url + "\n" +
+		"🔹 Starred Repos URL: " + .starred_url + "\n" +
+		"🔹 Subscriptions URL: " + .subscriptions_url + "\n\n" +
+
+		"📩 Contact & Profile Details:\n" +
+		"--------------------------------\n" +
+		"🔹 Email: " + (if .email then .email else "Not Public" end) + "\n" +
+		"🔹 Notification Email: " + (if .notification_email then .notification_email else "Not Set" end) + "\n" +
+		"🔹 Blog: " + (if .blog and .blog != "" then .blog else "None" end) + "\n" +
+		"🔹 Company: " + (if .company then .company else "None" end) + "\n" +
+		"🔹 Location: " + (if .location then .location else "Not Provided" end) + "\n" +
+		"🔹 Bio: " + (if .bio then .bio else "Not Provided" end) + "\n" +
+		"🔹 Hireable: " + (if .hireable then "✅ Yes" else "❌ No" end) + "\n" +
+		"🔹 Twitter: " + (if .twitter_username then .twitter_username else "Not Linked" end) + "\n\n" +
+
+		"🖼 Avatar URL:\n   ➤ " + .avatar_url
+	'
 
     echo -e "\n\e[1;32m✅ Setup complete! You are now authenticated with GitHub via SSH.\e[0m\n"
 }
