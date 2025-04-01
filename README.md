@@ -6,7 +6,7 @@
 Welcome to the **git_new_account_setup** repository! 🎉
 
 ## 📌 About This Project
-This script eacily walks you through the process of setting up a new github account in your linux system
+This script easily walks you through the process of setting up a new github account in your linux system
 
 - Asks for the github username
 - Asks for the email associated with the github username
